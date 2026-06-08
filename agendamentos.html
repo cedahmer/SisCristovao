@@ -117,7 +117,7 @@
                     listaServicosDb = servicos; // Guarda na memória global
                     const selS = document.getElementById('selServico');
                     servicos.forEach(s => {
-                        selS.innerHTML += `<option value="${s.id}">${s.nome}</option>`;
+                        selS.innerHTML += `<option value="${s.id}">${s.descricao}</option>`;
                     });
                 })
                 .catch(err => console.error("Erro ao buscar serviços:", err));
