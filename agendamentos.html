@@ -76,7 +76,7 @@
                     </tr>
                 </thead>
                 <tbody id="lista-servicos-agendados">
-                    </tbody>
+                </tbody>
             </table>
 
             <div style="text-align: right; margin-top: 15px;">
@@ -104,7 +104,6 @@
                 .then(clientes => {
                     const sel = document.getElementById('selCliente');
                     clientes.forEach(c => {
-                        // Correção da string malformada:
                         sel.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
                     });
                 })
@@ -120,94 +119,4 @@
                         selS.innerHTML += `<option value="${s.id}">${s.descricao}</option>`;
                     });
                 })
-                .catch(err => console.error("Erro ao buscar serviços:", err));
-        };
-
-        // Atualiza os campos de preço e tempo ao selecionar um serviço
-        function atualizarDadosServico() {
-            const idSelecionado = document.getElementById('selServico').value;
-            const servicoEncontrado = listaServicosDb.find(s => s.id == idSelecionado);
-
-            if (servicoEncontrado) {
-                document.getElementById('txtPreco').value = servicoEncontrado.preco;
-                document.getElementById('txtTempo').value = servicoEncontrado.tempo_estimado;
-            } else {
-                document.getElementById('txtPreco').value = "";
-                document.getElementById('txtTempo').value = "";
-            }
-        }
-
-        // Adiciona o serviço selecionado à tabela temporária (carrinho)
-        function adicionarServicoNaLista() {
-            const idSelecionado = document.getElementById('selServico').value;
-            const servicoEncontrado = listaServicosDb.find(s => s.id == idSelecionado);
-
-            if (!servicoEncontrado) {
-                alert("Por favor, selecione um serviço válido.");
-                return;
-            }
-
-            // Adiciona ao array do carrinho
-            carrinhoServicos.push(servicoEncontrado);
-
-            // Atualiza a tabela HTML
-            const tbody = document.getElementById('lista-servicos-agendados');
-            tbody.innerHTML += `
-                <tr>
-                    <td>${servicoEncontrado.nome}</td>
-                    <td>${servicoEncontrado.tempo_estimado}h</td>
-                    <td>R$ ${parseFloat(servicoEncontrado.preco).toFixed(2)}</td>
-                </tr>
-            `;
-
-            // Atualiza os totais da tela
-            totalGeral += parseFloat(servicoEncontrado.preco);
-            tempoTotalGeral += parseFloat(servicoEncontrado.tempo_estimado);
-
-            document.getElementById('txtTotal').innerText = `Total Geral: R$ ${totalGeral.toFixed(2)}`;
-            document.getElementById('txtTempoTotal').innerText = `Tempo Total Estimado: ${tempoTotalGeral}h`;
-        }
-
-        // Envia todos os dados preenchidos para salvar no backend (Node.js)
-        function finalizarAgendamento() {
-            const clienteId = document.getElementById('selCliente').value;
-            const dataAgendamento = document.getElementById('data_agendamento').value;
-            const responsavel = document.getElementById('responsavel').value;
-
-            if (!clienteId || !dataAgendamento || !responsavel || carrinhoServicos.length === 0) {
-                alert("Por favor, preencha todos os campos e adicione pelo menos um serviço.");
-                return;
-            }
-
-            const dadosAgendamento = {
-                cliente_id: clienteId,
-                data_hora: dataAgendamento,
-                responsavel: responsavel,
-                servicos: carrinhoServicos.map(s => s.id) // Envia apenas os IDs dos serviços
-            };
-
-            fetch('/salvar-agendamento', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dadosAgendamento)
-            })
-            .then(res => {
-                if (res.ok) {
-                    alert("Agendamento salvo com sucesso!");
-                    window.location.href = 'consulta_agendamentos.html';
-                } else {
-                    alert("Erro ao salvar agendamento.");
-                }
-            })
-            .catch(err => console.error("Erro na requisição:", err));
-        }
-    </script>
-</body>
-
-<footer class="rodape">
-    <div class="container-rodape">
-        <p>&copy; 2026 SisCristóvão - Sistema de Controle de Serviços</p>
-        <p>Desenvolvido para fins didáticos - Alunos do São Cristóvão</p>
-    </div>
-</footer>
-</html>
+                .catch(err => console.error("Erro ao buscar serviços:", err
